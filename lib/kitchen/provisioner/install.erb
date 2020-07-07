@@ -67,13 +67,14 @@ then
   #{sudo('apt-get')} install -y salt-minion salt-common salt-master
 elif [ -z "${SALT_VERSION}" -a "#{salt_install}" = "distrib" ]
 then
-  if [ ! $(command -v apt-get &>/dev/null) ]; then
+  echo "-----> Attempting to detect package manager and install salt-minion for your distro"
+  if exists apt-get; then
     #{sudo('apt-get')} update
     #{sudo('apt-get')} install -y salt-minion salt-common salt-master
-  elif [ ! $(command -v yum &>/dev/null) ]; then
+  elif exists yum; then
     #{sudo('yum')} install -y salt-minion salt-common salt-master
   else
-    echo "salt_install=distrib requires apt-get or yum to install salt-minion!"
+    echo "Install failed, salt_install=distrib requires apt-get or yum to install salt-minion!"
     exit 2
   fi
 elif [ -z "${SALT_VERSION}" -a "#{salt_install}" = "ppa" ]
