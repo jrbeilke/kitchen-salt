@@ -183,6 +183,16 @@ suites:
     includes:
       - centos-6
       - centos-7
+  - name: distrib
+    provisioner:
+      salt_install: distrib
+    includes:
+      - centos-6
+      - centos-7
+      - debian-8
+      - debian-9
+      - ubuntu-18.04
+      - ubuntu-16.04
   - name: bootstrap
 <% if @vagrant != false %>
     excludes:

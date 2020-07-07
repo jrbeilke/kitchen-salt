@@ -67,8 +67,15 @@ then
   #{sudo('apt-get')} install -y salt-minion salt-common salt-master
 elif [ -z "${SALT_VERSION}" -a "#{salt_install}" = "distrib" ]
 then
-  #{sudo('apt-get')} update
-  #{sudo('apt-get')} install -y salt-minion salt-master
+  if [ ! $(command -v apt-get &>/dev/null) ]; then
+    #{sudo('apt-get')} update
+    #{sudo('apt-get')} install -y salt-minion salt-common salt-master
+  elif [ ! $(command -v yum &>/dev/null) ]; then
+    #{sudo('yum')} install -y salt-minion salt-common salt-master
+  else
+    echo "salt_install=distrib requires apt-get or yum to install salt-minion!"
+    exit 2
+  fi
 elif [ -z "${SALT_VERSION}" -a "#{salt_install}" = "ppa" ]
 then
   #{sudo('apt-add-repository')} -y #{salt_ppa}
